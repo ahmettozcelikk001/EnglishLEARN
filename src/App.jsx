@@ -7,6 +7,7 @@ import AuthPage from './pages/AuthPage'
 import Dashboard from './pages/Dashboard'
 import Flashcards from './pages/Flashcards'
 import Review from './pages/Review'
+import Materials from './pages/Materials'
 
 // Zaten giriş yapmış kullanıcı /login'e giderse panele yönlendir.
 function LoginRoute() {
@@ -33,10 +34,7 @@ export default function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/flashcards" element={<Flashcards />} />
           <Route path="/review" element={<Review />} />
-          <Route
-            path="/materials"
-            element={<Placeholder title="Materyaller" description="Okuma/dinleme materyalleri — Stage 6'da gelecek." />}
-          />
+          <Route path="/materials" element={<Materials />} />
           <Route
             path="/quiz"
             element={<Placeholder title="Quiz" description="Alıştırma/quiz — Stage 7'de gelecek." />}
