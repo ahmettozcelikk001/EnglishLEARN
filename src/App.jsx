@@ -2,12 +2,12 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
-import Placeholder from './components/Placeholder'
 import AuthPage from './pages/AuthPage'
 import Dashboard from './pages/Dashboard'
 import Flashcards from './pages/Flashcards'
 import Review from './pages/Review'
 import Materials from './pages/Materials'
+import Quiz from './pages/Quiz'
 
 // Zaten giriş yapmış kullanıcı /login'e giderse panele yönlendir.
 function LoginRoute() {
@@ -35,10 +35,7 @@ export default function App() {
           <Route path="/flashcards" element={<Flashcards />} />
           <Route path="/review" element={<Review />} />
           <Route path="/materials" element={<Materials />} />
-          <Route
-            path="/quiz"
-            element={<Placeholder title="Quiz" description="Alıştırma/quiz — Stage 7'de gelecek." />}
-          />
+          <Route path="/quiz" element={<Quiz />} />
         </Route>
 
         {/* Bilinmeyen yol → panele */}
