@@ -1,45 +1,55 @@
-import { supabase } from './lib/supabase'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import Layout from './components/Layout'
+import Placeholder from './components/Placeholder'
+import AuthPage from './pages/AuthPage'
+import Dashboard from './pages/Dashboard'
 
-// Stage 1: iskeletin çalıştığını doğrulayan basit başlangıç ekranı.
-// Sonraki aşamalarda buraya routing + auth + modüller eklenecek.
-export default function App() {
-  const envReady =
-    !!import.meta.env.VITE_SUPABASE_URL &&
-    import.meta.env.VITE_SUPABASE_URL !== 'https://YOUR-PROJECT-ref.supabase.co'
-
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-sm border border-slate-200 p-8">
-        <h1 className="text-2xl font-bold text-slate-900">İngilizce Platform</h1>
-        <p className="mt-2 text-slate-500">Kişisel İngilizce öğrenme uygulaması</p>
-
-        <div className="mt-6 space-y-2 text-sm">
-          <StatusRow label="React + Vite" ok />
-          <StatusRow label="TailwindCSS" ok />
-          <StatusRow label="Supabase client" ok={!!supabase} />
-          <StatusRow
-            label={envReady ? '.env yapılandırıldı' : '.env henüz doldurulmadı'}
-            ok={envReady}
-          />
-        </div>
-
-        <p className="mt-6 text-xs text-slate-400">
-          Stage 1 tamam. Sıradaki adım: Supabase tabloları + kimlik doğrulama.
-        </p>
-      </div>
-    </div>
-  )
+// Zaten giriş yapmış kullanıcı /login'e giderse panele yönlendir.
+function LoginRoute() {
+  const { session, loading } = useAuth()
+  if (loading) return null
+  if (session) return <Navigate to="/" replace />
+  return <AuthPage />
 }
 
-function StatusRow({ label, ok }) {
+export default function App() {
   return (
-    <div className="flex items-center gap-2">
-      <span
-        className={`inline-block h-2.5 w-2.5 rounded-full ${
-          ok ? 'bg-emerald-500' : 'bg-amber-400'
-        }`}
-      />
-      <span className={ok ? 'text-slate-700' : 'text-slate-400'}>{label}</span>
-    </div>
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<LoginRoute />} />
+
+        {/* Korumalı alan: ortak kabuk (Layout) + alt sayfalar */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/" element={<Dashboard />} />
+          <Route
+            path="/flashcards"
+            element={<Placeholder title="Kartlar" description="Kelime kartları — Stage 4'te gelecek." />}
+          />
+          <Route
+            path="/review"
+            element={<Placeholder title="Tekrar" description="Aralıklı tekrar — Stage 4'te gelecek." />}
+          />
+          <Route
+            path="/materials"
+            element={<Placeholder title="Materyaller" description="Okuma/dinleme materyalleri — Stage 6'da gelecek." />}
+          />
+          <Route
+            path="/quiz"
+            element={<Placeholder title="Quiz" description="Alıştırma/quiz — Stage 7'de gelecek." />}
+          />
+        </Route>
+
+        {/* Bilinmeyen yol → panele */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AuthProvider>
   )
 }
